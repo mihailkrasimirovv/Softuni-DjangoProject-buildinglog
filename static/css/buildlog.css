@@ -1,0 +1,87 @@
+/* BuildLog - small additions on top of Bootstrap 5 */
+
+:root {
+    --buildlog-accent: #ffc107;
+}
+
+body {
+    background-color: #f5f6f8;
+}
+
+.navbar-brand .bi,
+.site-footer .bi {
+    margin-right: 0.15rem;
+}
+
+.navbar {
+    border-bottom: 3px solid var(--buildlog-accent);
+}
+
+.page-header {
+    border-left: 5px solid var(--buildlog-accent);
+    padding-left: 0.9rem;
+}
+
+.site-card {
+    transition: box-shadow 0.15s ease-in-out, transform 0.15s ease-in-out;
+}
+
+.site-card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+.stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.badge-high {
+    background-color: #fd7e14;
+    color: #fff;
+}
+
+.progress {
+    height: 1.1rem;
+    min-width: 6rem;
+}
+
+.progress-column {
+    width: 9rem;
+}
+
+.form-card {
+    max-width: 46rem;
+}
+
+/* Lists of checkboxes rendered by CheckboxSelectMultiple */
+.choice-list > div > div {
+    padding: 0.15rem 0;
+}
+
+.choice-list label {
+    cursor: pointer;
+}
+
+.choice-list input[type="checkbox"] {
+    width: 1.1em;
+    height: 1.1em;
+    margin-right: 0.4rem;
+    vertical-align: text-bottom;
+    accent-color: #0d6efd;
+}
+
+.detail-list dt {
+    font-weight: 600;
+    color: #6c757d;
+}
+
+.empty-state {
+    border: 2px dashed #ced4da;
+    border-radius: 0.5rem;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    color: #6c757d;
+    background-color: #fff;
+}

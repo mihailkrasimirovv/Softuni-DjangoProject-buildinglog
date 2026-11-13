@@ -1,0 +1,4 @@
+<div class="progress" role="progressbar" aria-label="Progress" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100">
+    <div class="progress-bar {{ colour }}" style="width: {{ percent }}%">{% if show_label and percent >= 15 %}{{ percent }}%{% endif %}</div>
+</div>
+{% if show_label and percent < 15 %}<span class="small text-muted">{{ percent }}%</span>{% endif %}

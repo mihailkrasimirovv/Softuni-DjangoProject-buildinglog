@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Server error{% endblock %}
+
+{% block content %}
+    <div class="text-center py-5">
+        <p class="display-1 fw-bold text-danger mb-0"><i class="bi bi-exclamation-triangle"></i> 500</p>
+        <h1 class="h3 mt-3">Something went wrong on our side</h1>
+        <p class="text-muted">Please go back and try again.</p>
+        <a class="btn btn-dark" href="{% url 'common:home' %}"><i class="bi bi-house"></i> Back to the home page</a>
+    </div>
+{% endblock %}

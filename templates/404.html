@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Page not found{% endblock %}
+
+{% block content %}
+    <div class="text-center py-5">
+        <p class="display-1 fw-bold text-warning mb-0"><i class="bi bi-cone-striped"></i> 404</p>
+        <h1 class="h3 mt-3">This area is not on the site plan</h1>
+        <p class="text-muted">
+            The page <code>{{ request.path }}</code> does not exist or the record was removed.
+        </p>
+        <a class="btn btn-dark" href="{% url 'common:home' %}"><i class="bi bi-house"></i> Back to the home page</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+    <div class="page-header mb-4">
+        <h1 class="h2 mb-1">About BuildLog</h1>
+        <p class="text-muted mb-0">A digital journal for following construction works from excavation to handover.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="h5">Why it exists</h2>
+                    <p>
+                        On a building site the same questions come up every day: which works are running late,
+                        which contractor is responsible, and which inspection remarks are still not fixed.
+                        BuildLog keeps the answers in one place instead of in scattered spreadsheets and notebooks.
+                    </p>
+                    <h2 class="h5 mt-4">How to use it</h2>
+                    <ol class="mb-0">
+                        <li>Register a <strong>construction site</strong> with its construction permit number.</li>
+                        <li>Add the <strong>contractors</strong> that work for you, each with its main trade.</li>
+                        <li>Plan <strong>work activities</strong> by construction stage and assign contractors to them.</li>
+                        <li>Report progress as the works advance and record <strong>inspection findings</strong>.</li>
+                        <li>Resolve the findings once they are fixed and download a progress report per site.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header fw-semibold">Rules the journal enforces</div>
+                <ul class="list-group list-group-flush small">
+                    <li class="list-group-item">A permit number and a company EIK can be registered only once and cannot be changed later.</li>
+                    <li class="list-group-item">An activity cannot start before its site and cannot be moved to another site.</li>
+                    <li class="list-group-item">Only active contractors can be assigned to activities.</li>
+                    <li class="list-group-item">A site can be completed only when all of its activities are at 100%.</li>
+                    <li class="list-group-item">Critical inspection findings must have a deadline.</li>
+                    <li class="list-group-item">Activities with recorded inspections cannot be deleted.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}

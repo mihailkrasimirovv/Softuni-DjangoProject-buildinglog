@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="p-4 p-md-5 mb-4 bg-white border rounded-3">
+        <h1 class="display-6 fw-semibold"><i class="bi bi-cone-striped text-warning"></i> BuildLog</h1>
+        <p class="lead mb-4">
+            A digital journal for construction sites: follow the works from excavation to handover,
+            know which contractor is responsible and keep every inspection remark until it is fixed.
+        </p>
+        <a class="btn btn-warning" href="{% url 'common:about' %}">How it works</a>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h5"><i class="bi bi-building"></i> Sites &amp; contractors</h2>
+                    <p class="mb-0 text-muted">Every construction site with its permit, deadline and the companies working on it.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h5"><i class="bi bi-hammer"></i> Work activities</h2>
+                    <p class="mb-0 text-muted">Works planned by construction stage, with reported progress and delays at a glance.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h5"><i class="bi bi-clipboard-check"></i> Inspections</h2>
+                    <p class="mb-0 text-muted">Findings from site inspections with severity, deadline and resolution.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
