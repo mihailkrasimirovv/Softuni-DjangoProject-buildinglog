@@ -35,6 +35,10 @@ DJANGO_APPS = [
 
 PROJECT_APPS = [
     "common.apps.CommonConfig",
+    "sites.apps.SitesConfig",
+    "contractors.apps.ContractorsConfig",
+    "works.apps.WorksConfig",
+    "inspections.apps.InspectionsConfig",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
