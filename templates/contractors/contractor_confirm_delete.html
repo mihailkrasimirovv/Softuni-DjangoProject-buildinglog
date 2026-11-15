@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Delete {{ contractor.company_name }}{% endblock %}
+
+{% block content %}
+    <div class="form-card">
+        <div class="page-header mb-3">
+            <h1 class="h2 mb-1">Delete contractor?</h1>
+            <p class="text-muted mb-0">This action cannot be undone.</p>
+        </div>
+
+        {% if activity_count %}
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle"></i>
+                This contractor will be removed from {{ activity_count }} work activit{{ activity_count|pluralize:"y,ies" }}.
+                The activities themselves will be kept.
+            </div>
+        {% endif %}
+
+        {% include "partials/delete_confirmation.html" with cancel_url=contractor.get_absolute_url %}
+    </div>
+{% endblock %}

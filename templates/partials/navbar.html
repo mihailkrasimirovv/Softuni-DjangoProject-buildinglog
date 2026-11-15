@@ -1,3 +1,4 @@
+{% with current_app=request.resolver_match.app_name %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand fw-semibold" href="{% url 'common:home' %}">
@@ -10,12 +11,25 @@
         <div class="collapse navbar-collapse" id="main-navigation">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.view_name == 'common:home' %}active{% endif %}" href="{% url 'common:home' %}">Home</a>
+                    <a class="nav-link {% if current_app == 'sites' %}active{% endif %}" href="{% url 'sites:list' %}">Sites</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if current_app == 'contractors' %}active{% endif %}" href="{% url 'contractors:list' %}">Contractors</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.view_name == 'common:about' %}active{% endif %}" href="{% url 'common:about' %}">About</a>
                 </li>
             </ul>
+            <div class="dropdown">
+                <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-plus-lg"></i> Add new
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="{% url 'sites:create' %}">Construction site</a></li>
+                    <li><a class="dropdown-item" href="{% url 'contractors:create' %}">Contractor</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 </nav>
+{% endwith %}

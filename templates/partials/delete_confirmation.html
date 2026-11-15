@@ -1,0 +1,16 @@
+{% comment %}
+Shared body of every delete confirmation page.
+Expects "summary_form" (read-only fields) and "cancel_url"; the page adds its own warning text before it.
+{% endcomment %}
+<div class="card border-danger">
+    <div class="card-body">
+        <fieldset disabled>
+            {% include "partials/form_fields.html" with form=summary_form %}
+        </fieldset>
+        <form method="post" class="d-flex gap-2">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Yes, delete</button>
+            <a class="btn btn-outline-secondary" href="{{ cancel_url }}">Cancel</a>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+{% load buildlog_tags %}
+<div class="card h-100 site-card">
+    <div class="card-body d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+            <h2 class="h5 card-title mb-0">
+                <a class="stretched-link text-decoration-none" href="{{ site.get_absolute_url }}">{{ site.name }}</a>
+            </h2>
+            <span class="badge {{ site.status|badge_class }}">{{ site.get_status_display }}</span>
+        </div>
+        <p class="text-muted small mb-2">
+            <i class="bi bi-geo-alt"></i> {{ site.city }} &middot; {{ site.get_site_type_display }}<br>
+            <i class="bi bi-file-earmark-text"></i> Permit {{ site.permit_number }}
+        </p>
+        <div class="mt-auto">
+            {% progress_bar site.progress %}
+            <p class="small mb-0 mt-2 {% if site.is_overdue %}text-danger fw-semibold{% else %}text-muted{% endif %}">
+                <i class="bi bi-calendar-event"></i>
+                {{ site.planned_end_date|date:"d M Y" }}
+                {% if not site.is_completed %}({{ site.planned_end_date|deadline_label }}){% endif %}
+            </p>
+        </div>
+    </div>
+</div>

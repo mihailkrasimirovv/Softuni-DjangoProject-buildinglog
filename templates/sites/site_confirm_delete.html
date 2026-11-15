@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Delete {{ site.name }}{% endblock %}
+
+{% block content %}
+    <div class="form-card">
+        <div class="page-header mb-3">
+            <h1 class="h2 mb-1">Delete construction site?</h1>
+            <p class="text-muted mb-0">This action cannot be undone.</p>
+        </div>
+
+        {% if inspection_count %}
+            <div class="alert alert-danger">
+                <i class="bi bi-shield-lock"></i>
+                {{ inspection_count }} inspection{{ inspection_count|pluralize }} {{ inspection_count|pluralize:"is,are" }} recorded for this site.
+                Inspection records protect their activities, so the site cannot be deleted until they are removed.
+            </div>
+        {% elif activity_count %}
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle"></i>
+                {{ activity_count }} work activit{{ activity_count|pluralize:"y,ies" }} of this site will be deleted as well.
+            </div>
+        {% endif %}
+
+        {% include "partials/delete_confirmation.html" with cancel_url=site.get_absolute_url %}
+    </div>
+{% endblock %}

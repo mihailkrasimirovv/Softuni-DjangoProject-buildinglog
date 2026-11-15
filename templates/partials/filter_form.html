@@ -1,0 +1,18 @@
+{% comment %}GET form used to search, filter and sort a list page. Expects "filter_form" and "reset_url".{% endcomment %}
+<form method="get" class="card card-body filter-form mb-4" novalidate>
+    <div class="row g-2 align-items-end">
+        {% for field in filter_form %}
+            <div class="col-sm-6 col-lg">
+                <label class="form-label small mb-1" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <div class="col-sm-12 col-lg-auto d-flex gap-2">
+            <button type="submit" class="btn btn-dark"><i class="bi bi-funnel"></i> Apply</button>
+            <a class="btn btn-outline-secondary" href="{{ reset_url }}">Reset</a>
+        </div>
+    </div>
+</form>

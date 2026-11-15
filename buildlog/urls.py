@@ -6,6 +6,8 @@ from django.urls import include, path, re_path
 
 urlpatterns = [
     path("", include("common.urls")),
+    path("sites/", include("sites.urls")),
+    path("contractors/", include("contractors.urls")),
     path("admin/", admin.site.urls),
     # The project is meant to be evaluated locally with DEBUG switched off
     # (so the custom 404 page is visible). Django's development server only

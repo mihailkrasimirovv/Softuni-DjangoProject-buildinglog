@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load buildlog_tags %}
+
+{% block title %}{{ site.name }}{% endblock %}
+
+{% block content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'sites:list' %}">Construction sites</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ site.name|truncatechars:60 }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+        <div class="page-header">
+            <h1 class="h2 mb-1">{{ site.name }}</h1>
+            <p class="mb-0">
+                <span class="badge {{ site.status|badge_class }}">{{ site.get_status_display }}</span>
+                {% if site.is_overdue %}<span class="badge text-bg-danger">Overdue</span>{% endif %}
+                <span class="text-muted small ms-1">Last updated {{ site.updated_at|timesince }} ago</span>
+            </p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-outline-primary" href="{% url 'sites:edit' site.pk %}"><i class="bi bi-pencil"></i> Edit</a>
+            <a class="btn btn-outline-danger" href="{% url 'sites:delete' site.pk %}"><i class="bi bi-trash"></i> Delete</a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card h-100">
+                <div class="card-body">
+                    <dl class="row detail-list mb-0">
+                        <dt class="col-sm-4">Construction permit</dt>
+                        <dd class="col-sm-8">{{ site.permit_number }}</dd>
+                        <dt class="col-sm-4">Type</dt>
+                        <dd class="col-sm-8">{{ site.get_site_type_display }}</dd>
+                        <dt class="col-sm-4">Location</dt>
+                        <dd class="col-sm-8">{{ site.address }}, {{ site.city }}</dd>
+                        <dt class="col-sm-4">Investor / client</dt>
+                        <dd class="col-sm-8">{{ site.investor }}</dd>
+                        <dt class="col-sm-4">Gross floor area</dt>
+                        <dd class="col-sm-8">{{ site.gross_floor_area|floatformat:"-2g" }} m²</dd>
+                        <dt class="col-sm-4">Description</dt>
+                        <dd class="col-sm-8">{{ site.description|linebreaksbr|default:"No description." }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h6 text-muted">Overall progress</h2>
+                    {% progress_bar site.progress %}
+                    <p class="small text-muted mt-1">Average of {{ site.activity_count }} activit{{ site.activity_count|pluralize:"y,ies" }}.</p>
+                    <dl class="row detail-list mb-0">
+                        <dt class="col-6">Start</dt>
+                        <dd class="col-6">{{ site.start_date|date:"d M Y" }}</dd>
+                        <dt class="col-6">Planned completion</dt>
+                        <dd class="col-6">
+                            {{ site.planned_end_date|date:"d M Y" }}
+                            {% if not site.is_completed %}
+                                <div class="small {% if site.is_overdue %}text-danger fw-semibold{% else %}text-muted{% endif %}">{{ site.planned_end_date|deadline_label }}</div>
+                            {% endif %}
+                        </dd>
+                        <dt class="col-6">Planned duration</dt>
+                        <dd class="col-6">{{ site.duration_days }} day{{ site.duration_days|pluralize }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
