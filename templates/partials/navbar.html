@@ -17,6 +17,12 @@
                     <a class="nav-link {% if current_app == 'contractors' %}active{% endif %}" href="{% url 'contractors:list' %}">Contractors</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {% if current_app == 'works' %}active{% endif %}" href="{% url 'works:list' %}">Activities</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if current_app == 'inspections' %}active{% endif %}" href="{% url 'inspections:list' %}">Inspections</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {% if request.resolver_match.view_name == 'common:about' %}active{% endif %}" href="{% url 'common:about' %}">About</a>
                 </li>
             </ul>
@@ -27,6 +33,8 @@
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="{% url 'sites:create' %}">Construction site</a></li>
                     <li><a class="dropdown-item" href="{% url 'contractors:create' %}">Contractor</a></li>
+                    <li><a class="dropdown-item" href="{% url 'works:create' %}">Work activity</a></li>
+                    <li><a class="dropdown-item" href="{% url 'inspections:create' %}">Inspection</a></li>
                 </ul>
             </div>
         </div>

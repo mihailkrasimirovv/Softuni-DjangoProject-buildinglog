@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load buildlog_tags %}
+
+{% block title %}{{ inspection.title }}{% endblock %}
+
+{% block content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'inspections:list' %}">Inspections</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ inspection.title|truncatechars:60 }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+        <div class="page-header">
+            <h1 class="h2 mb-1">{{ inspection.title }}</h1>
+            <p class="mb-0">
+                <span class="badge {{ inspection.severity|badge_class }}">{{ inspection.get_severity_display }}</span>
+                {% if inspection.is_resolved %}
+                    <span class="badge text-bg-success">Resolved</span>
+                {% elif inspection.is_overdue %}
+                    <span class="badge text-bg-danger">Overdue</span>
+                {% else %}
+                    <span class="badge text-bg-secondary">Open</span>
+                {% endif %}
+            </p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            {% if inspection.is_resolved %}
+                <form method="post" action="{% url 'inspections:reopen' inspection.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-warning"><i class="bi bi-arrow-counterclockwise"></i> Reopen</button>
+                </form>
+            {% else %}
+                <a class="btn btn-success" href="{% url 'inspections:resolve' inspection.pk %}"><i class="bi bi-check-lg"></i> Resolve</a>
+            {% endif %}
+            <a class="btn btn-outline-primary" href="{% url 'inspections:edit' inspection.pk %}"><i class="bi bi-pencil"></i> Edit</a>
+            <a class="btn btn-outline-danger" href="{% url 'inspections:delete' inspection.pk %}"><i class="bi bi-trash"></i> Delete</a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card h-100">
+                <div class="card-header fw-semibold">Finding</div>
+                <div class="card-body">
+                    <p>{{ inspection.finding|linebreaksbr }}</p>
+                    <dl class="row detail-list mb-0">
+                        <dt class="col-sm-4">Construction site</dt>
+                        <dd class="col-sm-8"><a href="{{ inspection.activity.site.get_absolute_url }}">{{ inspection.activity.site.name }}</a></dd>
+                        <dt class="col-sm-4">Inspected activity</dt>
+                        <dd class="col-sm-8"><a href="{{ inspection.activity.get_absolute_url }}">{{ inspection.activity.title }}</a></dd>
+                        <dt class="col-sm-4">Inspector</dt>
+                        <dd class="col-sm-8">{{ inspection.inspector }}</dd>
+                        <dt class="col-sm-4">Inspection date</dt>
+                        <dd class="col-sm-8">{{ inspection.inspected_on|date:"d M Y" }}</dd>
+                        <dt class="col-sm-4">Fix by</dt>
+                        <dd class="col-sm-8">
+                            {% if inspection.due_date %}
+                                {{ inspection.due_date|date:"d M Y" }}
+                                {% if not inspection.is_resolved %}
+                                    <span class="small {% if inspection.is_overdue %}text-danger fw-semibold{% else %}text-muted{% endif %}">({{ inspection.due_date|deadline_label }})</span>
+                                {% endif %}
+                            {% else %}
+                                No deadline
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card h-100 {% if inspection.is_resolved %}border-success{% endif %}">
+                <div class="card-header fw-semibold">Resolution</div>
+                <div class="card-body">
+                    {% if inspection.is_resolved %}
+                        <p class="text-success fw-semibold mb-2"><i class="bi bi-check-circle"></i> Resolved on {{ inspection.resolved_on|date:"d M Y" }}</p>
+                        <p class="mb-0">{{ inspection.resolution_note|linebreaksbr }}</p>
+                    {% else %}
+                        <p class="text-muted">This finding has not been resolved yet.</p>
+                        <a class="btn btn-success" href="{% url 'inspections:resolve' inspection.pk %}"><i class="bi bi-check-lg"></i> Mark as resolved</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Delete {{ inspection.title }}{% endblock %}
+
+{% block content %}
+    <div class="form-card">
+        <div class="page-header mb-3">
+            <h1 class="h2 mb-1">Delete inspection?</h1>
+            <p class="text-muted mb-0">This action cannot be undone.</p>
+        </div>
+
+        {% include "partials/delete_confirmation.html" with cancel_url=inspection.get_absolute_url %}
+    </div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% load buildlog_tags %}
+<a class="list-group-item list-group-item-action" href="{{ inspection.get_absolute_url }}">
+    <div class="d-flex justify-content-between align-items-start gap-2">
+        <div>
+            <span class="fw-semibold">{{ inspection.title }}</span>
+            <div class="small text-muted">
+                {{ inspection.activity.site.name }} &middot; {{ inspection.activity.title|truncatechars:40 }}
+                &middot; {{ inspection.inspected_on|date:"d M Y" }}
+            </div>
+        </div>
+        <div class="text-end text-nowrap">
+            <span class="badge {{ inspection.severity|badge_class }}">{{ inspection.get_severity_display }}</span>
+            {% if inspection.is_resolved %}
+                <div class="small text-success"><i class="bi bi-check-circle"></i> Resolved</div>
+            {% elif inspection.due_date %}
+                <div class="small {% if inspection.is_overdue %}text-danger fw-semibold{% else %}text-muted{% endif %}">{{ inspection.due_date|deadline_label }}</div>
+            {% else %}
+                <div class="small text-muted">No deadline</div>
+            {% endif %}
+        </div>
+    </div>
+</a>

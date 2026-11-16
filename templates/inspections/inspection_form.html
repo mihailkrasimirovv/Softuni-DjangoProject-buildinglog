@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{% if inspection %}Edit {{ inspection.title }}{% else %}Record an inspection{% endif %}{% endblock %}
+
+{% block content %}
+    <div class="page-header mb-4">
+        <h1 class="h2 mb-1">{% if inspection %}Edit inspection{% else %}Record an inspection{% endif %}</h1>
+        <p class="text-muted mb-0">Fields marked with <span class="text-danger">*</span> are required.</p>
+    </div>
+
+    {% if not inspection and not has_activities %}
+        <div class="alert alert-info form-card">
+            <i class="bi bi-info-circle"></i>
+            An inspection is recorded for a work activity, and there are no activities yet.
+            <a class="alert-link" href="{% url 'works:create' %}">Add a work activity</a> first.
+        </div>
+    {% endif %}
+
+    <div class="card form-card">
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% include "partials/form_fields.html" %}
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-warning">{% if inspection %}Save changes{% else %}Record inspection{% endif %}</button>
+                    <a class="btn btn-outline-secondary" href="{% if inspection %}{{ inspection.get_absolute_url }}{% else %}{% url 'inspections:list' %}{% endif %}">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

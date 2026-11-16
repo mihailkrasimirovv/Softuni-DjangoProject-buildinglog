@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{% if activity %}Edit {{ activity.title }}{% else %}Add a work activity{% endif %}{% endblock %}
+
+{% block content %}
+    <div class="page-header mb-4">
+        <h1 class="h2 mb-1">{% if activity %}Edit work activity{% else %}Add a work activity{% endif %}</h1>
+        <p class="text-muted mb-0">Fields marked with <span class="text-danger">*</span> are required.</p>
+    </div>
+
+    {% if not activity and not has_sites %}
+        <div class="alert alert-info form-card">
+            <i class="bi bi-info-circle"></i>
+            An activity belongs to a construction site, and there is no unfinished site yet.
+            <a class="alert-link" href="{% url 'sites:create' %}">Register a construction site</a> first.
+        </div>
+    {% endif %}
+
+    <div class="card form-card">
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+                {% include "partials/form_fields.html" %}
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-warning">{% if activity %}Save changes{% else %}Add activity{% endif %}</button>
+                    <a class="btn btn-outline-secondary" href="{% if activity %}{{ activity.get_absolute_url }}{% else %}{% url 'works:list' %}{% endif %}">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load buildlog_tags %}
+
+{% block title %}{{ activity.title }}{% endblock %}
+
+{% block content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'sites:list' %}">Construction sites</a></li>
+            <li class="breadcrumb-item"><a href="{{ activity.site.get_absolute_url }}">{{ activity.site.name|truncatechars:40 }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ activity.title|truncatechars:50 }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+        <div class="page-header">
+            <h1 class="h2 mb-1">{{ activity.title }}</h1>
+            <p class="mb-0">
+                <span class="badge {{ activity.state|badge_class }}">{{ activity.state.label }}</span>
+                <span class="text-muted small ms-1">{{ activity.get_stage_display }} stage</span>
+            </p>
+        </div>
+        <div class="d-flex gap-2">
+            <a class="btn btn-outline-primary" href="{% url 'works:edit' activity.pk %}"><i class="bi bi-pencil"></i> Edit / report progress</a>
+            <a class="btn btn-outline-danger" href="{% url 'works:delete' activity.pk %}"><i class="bi bi-trash"></i> Delete</a>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-7">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h6 text-muted">Progress</h2>
+                    {% progress_bar activity.progress %}
+                    <dl class="row detail-list mt-3 mb-0">
+                        <dt class="col-sm-4">Construction site</dt>
+                        <dd class="col-sm-8"><a href="{{ activity.site.get_absolute_url }}">{{ activity.site.name }}</a></dd>
+                        <dt class="col-sm-4">Period</dt>
+                        <dd class="col-sm-8">
+                            {{ activity.start_date|date:"d M Y" }} &ndash; {{ activity.end_date|date:"d M Y" }}
+                            ({{ activity.duration_days }} day{{ activity.duration_days|pluralize }})
+                            {% if not activity.is_completed %}
+                                <div class="small text-muted">{{ activity.end_date|deadline_label|capfirst }}</div>
+                            {% endif %}
+                        </dd>
+                        <dt class="col-sm-4">Description</dt>
+                        <dd class="col-sm-8">{{ activity.description|linebreaksbr|default:"No description." }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card h-100">
+                <div class="card-header fw-semibold">Assigned contractors</div>
+                <ul class="list-group list-group-flush">
+                    {% for contractor in contractors %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="{{ contractor.get_absolute_url }}">{{ contractor.company_name }}</a>
+                            <span class="small text-muted">{{ contractor.get_trade_display }}</span>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">No contractors assigned yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="h4 mb-0">Inspections</h2>
+        <a class="btn btn-sm btn-warning" href="{% url 'inspections:create' %}?activity={{ activity.pk }}"><i class="bi bi-plus-lg"></i> Record inspection</a>
+    </div>
+    {% if inspections %}
+        <div class="list-group">
+            {% for inspection in inspections %}
+                {% include "partials/inspection_item.html" %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">No inspections have been recorded for this activity.</div>
+    {% endif %}
+{% endblock %}
