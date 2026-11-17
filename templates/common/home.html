@@ -1,41 +1,116 @@
 {% extends "base.html" %}
+{% load buildlog_tags %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block content %}
-    <div class="p-4 p-md-5 mb-4 bg-white border rounded-3">
-        <h1 class="display-6 fw-semibold"><i class="bi bi-cone-striped text-warning"></i> BuildLog</h1>
-        <p class="lead mb-4">
-            A digital journal for construction sites: follow the works from excavation to handover,
-            know which contractor is responsible and keep every inspection remark until it is fixed.
-        </p>
-        <a class="btn btn-warning" href="{% url 'common:about' %}">How it works</a>
+    <div class="page-header mb-4">
+        <h1 class="h2 mb-1">Dashboard</h1>
+        <p class="text-muted mb-0">The state of all construction sites on {% now "l, d F Y" %}.</p>
     </div>
 
-    <div class="row g-3">
-        <div class="col-md-4">
-            <div class="card h-100">
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+            <a class="card stat-card h-100 text-decoration-none" href="{% url 'sites:list' %}">
                 <div class="card-body">
-                    <h2 class="h5"><i class="bi bi-building"></i> Sites &amp; contractors</h2>
-                    <p class="mb-0 text-muted">Every construction site with its permit, deadline and the companies working on it.</p>
+                    <div class="text-muted small"><i class="bi bi-building"></i> Construction sites</div>
+                    <div class="stat-value">{{ stats.sites_total }}</div>
+                    <div class="small text-muted">
+                        {{ stats.sites_active }} under construction{% if stats.sites_overdue %},
+                        <span class="text-danger">{{ stats.sites_overdue }} overdue</span>{% endif %}
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
-        <div class="col-md-4">
-            <div class="card h-100">
+        <div class="col-6 col-lg-3">
+            <a class="card stat-card h-100 text-decoration-none" href="{% url 'contractors:list' %}">
                 <div class="card-body">
-                    <h2 class="h5"><i class="bi bi-hammer"></i> Work activities</h2>
-                    <p class="mb-0 text-muted">Works planned by construction stage, with reported progress and delays at a glance.</p>
+                    <div class="text-muted small"><i class="bi bi-people"></i> Active contractors</div>
+                    <div class="stat-value">{{ stats.contractors_active }}</div>
+                    <div class="small text-muted">available for new activities</div>
                 </div>
-            </div>
+            </a>
         </div>
-        <div class="col-md-4">
-            <div class="card h-100">
+        <div class="col-6 col-lg-3">
+            <a class="card stat-card h-100 text-decoration-none" href="{% url 'works:list' %}">
                 <div class="card-body">
-                    <h2 class="h5"><i class="bi bi-clipboard-check"></i> Inspections</h2>
-                    <p class="mb-0 text-muted">Findings from site inspections with severity, deadline and resolution.</p>
+                    <div class="text-muted small"><i class="bi bi-hammer"></i> Work activities</div>
+                    <div class="stat-value">{{ stats.activities_total }}</div>
+                    <div class="small {% if stats.activities_delayed %}text-danger{% else %}text-muted{% endif %}">
+                        {{ stats.activities_delayed }} delayed
+                    </div>
                 </div>
+            </a>
+        </div>
+        <div class="col-6 col-lg-3">
+            <a class="card stat-card h-100 text-decoration-none" href="{% url 'inspections:list' %}?state=open">
+                <div class="card-body">
+                    <div class="text-muted small"><i class="bi bi-clipboard-check"></i> Open inspections</div>
+                    <div class="stat-value">{{ stats.inspections_open }}</div>
+                    <div class="small {% if stats.inspections_critical %}text-danger{% else %}text-muted{% endif %}">
+                        {{ stats.inspections_critical }} critical
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    {% if not stats.sites_total %}
+        <div class="empty-state mb-4">
+            <p class="h5">Welcome to BuildLog</p>
+            <p>Start by registering your first construction site, then add contractors, work activities and inspections.</p>
+            <a class="btn btn-warning" href="{% url 'sites:create' %}"><i class="bi bi-plus-lg"></i> Register a construction site</a>
+        </div>
+    {% endif %}
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h2 class="h5 mb-0">Nearest deadlines</h2>
+                <a class="small" href="{% url 'sites:list' %}">All sites</a>
             </div>
+            <div class="row g-3">
+                {% for site in upcoming_sites %}
+                    <div class="col-md-6">{% include "partials/site_card.html" %}</div>
+                {% empty %}
+                    <div class="col-12"><div class="empty-state">No unfinished construction sites.</div></div>
+                {% endfor %}
+            </div>
+
+            <h2 class="h5 mt-4 mb-2">Progress by construction stage</h2>
+            {% if stage_summary %}
+                <div class="card">
+                    <ul class="list-group list-group-flush">
+                        {% for row in stage_summary %}
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between small mb-1">
+                                    <span class="fw-semibold">{{ row.label }}</span>
+                                    <span class="text-muted">{{ row.total }} activit{{ row.total|pluralize:"y,ies" }} &middot; {{ row.average|floatformat:0 }}% on average</span>
+                                </div>
+                                {% progress_bar row.average show_label=False %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% else %}
+                <div class="empty-state">No work activities have been planned yet.</div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-5">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h2 class="h5 mb-0">Latest open inspections</h2>
+                <a class="small" href="{% url 'inspections:list' %}">All inspections</a>
+            </div>
+            {% if latest_inspections %}
+                <div class="list-group">
+                    {% for inspection in latest_inspections %}
+                        {% include "partials/inspection_item.html" %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">No open inspection findings.</div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
